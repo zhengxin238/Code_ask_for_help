@@ -45,23 +45,45 @@ def getFriendStructureList(g):
         for k in g.neighbors(i):
             lFriends.append(k)
         friend_structure_list.append(lFriends)
-    print(friend_structure_list)
     nx.draw(g, with_labels=True)
     plt.show()
     return friend_structure_list
 
 
+listOfFriendStructure = getFriendStructureList(g)
 
+
+def getNumberOfFriends(friendStructureList):
+    FvList = []
+    for i in friendStructureList:
+        if len(i) != 0:
+            FvList.append(len(i))
+        else:
+            FvList.append(1)
+    return FvList
+
+
+getNumberOfFriends(listOfFriendStructure)
 
 df_bordaScore = function_code.borda_score_df_func(function_code.candidates, function_code.voters,
                                                   function_code.preference_in_table)
 
-
-final_coeff_matrix=df_bordaScore.to_numpy()
-
-print(final_coeff_matrix)
+m_value_big = len(function_code.candidates)*2
+final_coeff_matrix = df_bordaScore.to_numpy()
 
 
 
+num_of_friends = getNumberOfFriends(listOfFriendStructure)
 
+
+# Print out neighboring nodes for each node
+def getNeighbors(graph_g):
+    list_l = []
+    for node in graph_g.nodes():
+        neighbors = list(graph_g.neighbors(node))
+        list_l.append(neighbors)
+    return list_l
+
+
+list_of_neighbors = getNeighbors(g)
 

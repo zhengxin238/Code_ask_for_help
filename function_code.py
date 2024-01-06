@@ -58,8 +58,7 @@ def borda_score_df_func(candidates, voters, preference):
         column_names.append(c)
     for v in voters:
         index_names.append(v)
-    print(column_names)
-    print(index_names)
+
     borda_score_df = pd.DataFrame(columns=column_names, index=index_names)
     for candidate in candidates:
         n = 0
@@ -72,7 +71,7 @@ def borda_score_df_func(candidates, voters, preference):
 # print("bordascore each voter for each candidaate")
 #
 borda_score_df = borda_score_df_func(candidates, voters, preference_in_table)
-print(borda_score_df)
+
 
 
 
