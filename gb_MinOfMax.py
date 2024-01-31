@@ -4,7 +4,7 @@ from gurobipy import *
 import graphCode_Coefficient_MinOfMax
 
 candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
-committee_size = 4
+committee_size =3
 
 # Define decision variables
 num_vars = len(candidates)
@@ -14,37 +14,80 @@ num_of_friends_list = graphCode_Coefficient_MinOfMax.num_of_friends
 list_of_neighbors = graphCode_Coefficient_MinOfMax.list_of_neighbors
 m_value = graphCode_Coefficient_MinOfMax.m_value_big
 
-## # # # # # #  x = m.addVars(num_vars, vtype=GRB.BINARY, name="x")
+m = Model("mlp")
+num_variables_group1 = num_vars
+x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 
-# Decision variables for group 1, this is fixed
+# Introduce 2D variables
+a_group_2dimensional = {}
+for i in range(len(list_of_neighbors)):
+    for j in range(len(list_of_neighbors[i])):
+        a_group_2dimensional[i, j] = m.addVar(vtype=GRB.BINARY, name="a_{i}_{j}")
 
+for i in range(len(list_of_neighbors)):
+    m.addConstr(sum(a_group_2dimensional[i, j] for j in range(len(list_of_neighbors[i]))) == 1, f"constraint_sum_{i}")
 
-# Decision variables for group 2, this dependents on how many friends a voter has
+m.addConstr(quicksum(x_group1[i] for i in range(num_vars)) == committee_size, "c2")
 
+# Introduce a new variable s
+s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
 
-# [2, 5, 6]
-for neighborofvoterv in list_of_neighbors:
-    m = Model("mlp")
-    num_variables_group1 = num_vars
-    x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
-    num_variables_group2 = len(neighborofvoterv)
-    x_group2 = m.addVars(num_variables_group2, vtype=GRB.BINARY, name="x")
-    objective_functions = []
-    for i in range (0,len(neighborofvoterv)):
-        coeff_vector = coeff[(neighborofvoterv[i] - 1), :]
+# print(a_group_2dimensional)
+constrains_objective_functions = []
+
+# Group variables by their first index
+grouped_variables = {}
+
+for key, var in a_group_2dimensional.items():
+    first_index = key[0]
+    if first_index not in grouped_variables:
+        grouped_variables[first_index] = []
+    grouped_variables[first_index].append(var)
+
+print(grouped_variables)
+# Add constraints for each group of variables
+for first_index, variables_in_group in grouped_variables.items():
+    m.addConstr(sum(variables_in_group) <= 1, f"group_constraint_{first_index}")
+
+for voterindex, voter in enumerate(list_of_neighbors):
+    for i in range (0,len(voter)):
+        coeff_vector = coeff[(voter[i] - 1), :]
         obj = gp.LinExpr()
         for j in range(num_vars):
             obj += coeff_vector[j] * x_group1[j]
-        obj += (1 - x_group2[i]) * m_value
-    objective_functions.append(obj)
+        obj += (1 - a_group_2dimensional[voterindex,i]) * m_value
+        constrains_objective_functions.append(obj)
+
+for i, obj_func in enumerate(constrains_objective_functions):
+    m.addConstr(s <= obj_func, f"max_constraint_{i}")
+
+
+m.setObjective(s, sense=GRB.MAXIMIZE)
+m.optimize()
+#Print the results
+if m.status == GRB.OPTIMAL:
+    print("Optimal solution found:")
+    for v in m.getVars():
+        print(f"{v.varName}: {v.x}")
+
+
+"""
+for voter in list_of_neighbors:       
+    for i in range (0,len(voter)):
+        coeff_vector = coeff[(voter[i] - 1), :]
+        obj = gp.LinExpr()
+        for j in range(num_vars):
+            obj += coeff_vector[j] * x_group1[j]s
+        obj += (1 - a_group[i]) * m_value
+        objective_functions.append(obj)
     # Introduce a new variable s
     s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
     # Add constraints to ensure that min_of_max is less than or equal to each objective
     for i, obj_func in enumerate(objective_functions):
         m.addConstr(s <= obj_func, f"max_constraint_{i}")
-
+    """ """
     m.addConstr(quicksum(x_group1[i] for i in range(num_vars)) == committee_size, "c2")
-    m.addConstr(quicksum(x_group2[i] for i in range(len(neighborofvoterv))) == 1, "c3")
+    m.addConstr(quicksum(a_group[i] for i in range(len(neighborofvoterv))) == 1, "c3")
 
     m.setObjective(s, sense=GRB.MAXIMIZE)
     m.optimize()
@@ -54,6 +97,8 @@ for neighborofvoterv in list_of_neighbors:
         for v in m.getVars():
            print(f"{v.varName}: {v.x}")
 """
+"""
+´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
 # Introduce a new variable s
 s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
 # Add constraints to ensure that min_of_max is less than or equal to each objective
@@ -65,6 +110,8 @@ m.addConstr(quicksum(x_group2[i] for i in range(num_vars)) == 1, "c3")
 
 m.setObjective(s, sense=GRB.MAXIMIZE)
 m.optimize()
+´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
+"""
 
 """
 
