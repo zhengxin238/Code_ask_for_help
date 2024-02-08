@@ -26,7 +26,7 @@ def getPreferenceList(file_path):
     for tuple_second_level in tuple_first_level:
         for i in range(1, (tuple_second_level[1] + 1)):
             preferenceList.append(list(tuple_second_level[0]))
-    print(111111111111111111111111111)
+    # print(111111111111111111111111111)
     return preferenceList
 
 

@@ -50,9 +50,9 @@ stepOneVector_small_world = graphCode_Coefficient_AvgAvg.getStepOneVector(small_
                                                                           adjacencyMatrix_small_world,
                                                                           oneOverFv_small_world)
 
-stepTwoVector_erdos_renyi = graphCode_Coefficient_AvgAvg.stepTwoVector(bs_df, stepOneVector_erdos_renyi)
-stepTwoVector_scale_free = graphCode_Coefficient_AvgAvg.stepTwoVector(bs_df, stepOneVector_scale_free)
-stepTwoVector_small_world = graphCode_Coefficient_AvgAvg.stepTwoVector(bs_df, stepOneVector_small_world)
+stepTwoVector_erdos_renyi = graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(bs_df, stepOneVector_erdos_renyi)
+stepTwoVector_scale_free = graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(bs_df, stepOneVector_scale_free)
+stepTwoVector_small_world = graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(bs_df, stepOneVector_small_world)
 
 m_er = Model("er")
 m_sf = Model("sf")

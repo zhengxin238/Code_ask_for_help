@@ -47,8 +47,8 @@ def getFriendStructureList(g):
             lFriends.append(k)
         friend_structure_list.append(lFriends)
     # print(friend_structure_list)
-    # nx.draw(g, with_labels=True)
-    # plt.show()
+    nx.draw(g, with_labels=True)
+    plt.show()
     return friend_structure_list
 
 
@@ -77,7 +77,7 @@ def getAdjacencyMatrix(gr):
 
 
 # adjacencyMatrix = getAdjacencyMatrix(g)
-# print(adjacencyMatrix)
+# # print(adjacencyMatrix)
 
 
 def getStepOneVector(g, adjacencyMatrix, oneOverFv):
@@ -89,7 +89,7 @@ def getStepOneVector(g, adjacencyMatrix, oneOverFv):
 
 # stepOneVector = getStepOneVector(g, adjacencyMatrix, oneOverFv)
 
-# print(stepOneVector)
+# # print(stepOneVector)
 # df_bordaScore = function_code.borda_score_df_func(function_code.candidates, function_code.voters,
 #                                                   function_code.preference_in_table)
 
@@ -100,17 +100,17 @@ def getStepOneVector(g, adjacencyMatrix, oneOverFv):
 # print(bs_array_transposed)
 
 
-def stepTwoVector_coeff(df_bordaScore, stepOneVector):
+def stepTwoVector(df_bordaScore, stepOneVector):
     stepTwoVector = []
     bsArray = df_bordaScore.to_numpy().transpose()
-    # print(bsArray)
+    print(bsArray)
     for i in bsArray:
         stepTwoVector.append(np.dot(i, stepOneVector))
     return stepTwoVector
 
 
-# coefficient = stepTwoVector_coeff(df_bordaScore, stepOneVector)
-# print(stepTwoVector_coeff(df_bordaScore, stepOneVector))
+# coefficient = stepTwoVector(df_bordaScore, stepOneVector)
+# print(stepTwoVector(df_bordaScore, stepOneVector))
 """getFriendStructureList(0.03, 154)"""
 
 
