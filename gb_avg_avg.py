@@ -63,7 +63,6 @@ def run_optimization(model):
     if model.status == GRB.OPTIMAL:
         for v in model.getVars():
             optimal_solution[v.varName] = v.x
-            print(f"{v.varName} = {v.x}")
     return optimal_solution
 
 

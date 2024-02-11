@@ -55,7 +55,7 @@ def getResultIntoDB_minOfavg_graphnnormal_diff_committeesize_p(p_list, committee
                                                                      committee_size)
 
             gb_min_avg.dict_to_preflib_format(result_dict["final_committee"], directory,  f"00009-00000001_{committee_size}_{p}.txt")
-            result_list_dict_temp[str((p))] = (result_dict)
+            result_list_dict_temp[str((p))] = result_dict
         committee_size_dict[str(committee_size)] = result_list_dict_temp
         collection_db.insert_one(committee_size_dict)
 
