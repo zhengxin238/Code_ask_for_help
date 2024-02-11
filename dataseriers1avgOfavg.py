@@ -12,10 +12,10 @@ from preflibtools.instances import PrefLibInstance
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
 db = client['votingdb']
-collection = db['AvgOfAvg00015-00000001']
+collection = db['AvgOfAvg00015-00000002']
 # =====================================================
 # the input information
-url = r"https://www.preflib.org/static/data/cleanweb/00015-00000001.soc"
+url = r"https://www.preflib.org/static/data/cleanweb/00015-00000002.soc"
 candidates = list(range(1, (
         prefLibParse.getNumberOfAlternatives(url) + 1)))
 voters = list(

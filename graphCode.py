@@ -47,8 +47,8 @@ def getFriendStructureList(g):
             lFriends.append(k)
         friend_structure_list.append(lFriends)
     # print(friend_structure_list)
-    nx.draw(g, with_labels=True)
-    plt.show()
+    # nx.draw(g, with_labels=True)
+    # plt.show()
     return friend_structure_list
 
 

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 scale_free_graph = nx.barabasi_albert_graph(10, 2)
 
 nx.draw(scale_free_graph, with_labels=False, node_size=30)
-plt.show()
+
 
 #============================================================
 
