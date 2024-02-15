@@ -60,7 +60,6 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
     optimal_solutions = []
     optimal_values = []
     optimal_solution_dict = {}
-    corresponding_objectives = []
 
     for neighborofvoterv in list_of_neighbors_a:
         if neighborofvoterv != []:
