@@ -86,8 +86,8 @@ def minOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
             a_group_2dimensional[i, j] = m.addVar(vtype=GRB.BINARY, name=f"a_{i}_{j}")
 
     for i in range(len(list_of_neighbors_a)):
-        m.addConstr(sum(a_group_2dimensional[i, j] for j in range(len(list_of_neighbors_a[i]))) == 1,
-                    f"constraint_sum_{i}")
+        if len(list_of_neighbors_a[i]) != 0:
+            m.addConstr(sum(a_group_2dimensional[i, j] for j in range(len(list_of_neighbors_a[i]))) == 1,f"constraint_sum_{i}")
 
     m.addConstr(quicksum(x_group1[i] for i in range(num_vars_a)) == committee_size_a, "c2")
 

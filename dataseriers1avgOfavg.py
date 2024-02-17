@@ -31,6 +31,7 @@ def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee
                                                                preference_in_table, collection_db):
     for committee_size in committee_size_list:
         for p in p_list:
+            g = graphCode.getGraph(p, len(voters))
             result_dict = gb_avg_avg.run_optimization(gb_avg_avg.avgOfAvg_model(len(candidates),
                                                                                 graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
                                                                                     function_code.borda_score_df_func(
@@ -38,21 +39,20 @@ def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee
                                                                                         voters,
                                                                                         preference_in_table),
                                                                                     graphCode_Coefficient_AvgAvg.getStepOneVector(
-                                                                                        graphCode.getGraph(p,
-                                                                                                           len(voters)),
+                                                                                        g,
                                                                                         graphCode_Coefficient_AvgAvg.getAdjacencyMatrix(
-                                                                                            graphCode.getGraph(p,
-                                                                                                               len(voters))),
+                                                                                            g),
                                                                                         graphCode_Coefficient_AvgAvg.getOneOverFv(
                                                                                             graphCode.getFriendStructureList(
-                                                                                                graphCode.getGraph(p,
-                                                                                                                   len(voters)))))),
+                                                                                                g)))),
                                                                                 committee_size))
             collection_db.insert_one(result_dict)
 
     return None
+
+
 getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
-                                                               preference_in_table, collection)
+                                                           preference_in_table, collection)
 # committee_size = 4
 # p = 0.7
 
