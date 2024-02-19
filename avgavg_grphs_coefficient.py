@@ -3,7 +3,7 @@ import gurobipy as gp
 from gurobipy import *
 import function_code
 import prefLibParse
-import graphCode_Coefficient_AvgAvg
+from coefficients import graphCode_Coefficient_AvgAvg
 
 # =========================================================
 candidates = list(range(1, (

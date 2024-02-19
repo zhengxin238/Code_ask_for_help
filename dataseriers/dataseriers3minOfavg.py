@@ -1,18 +1,10 @@
-from itertools import combinations
-import pandas as pd
-
-import gb_min_avg
-import graphCode_Coefficient_MinAvg
+from gb import gb_min_avg
+from coefficients import graphCode_Coefficient_MinAvg
 import prefLibParse
 import graphCode
 import function_code
-import graphCode_Coefficient_AvgAvg
-import gb_avg_avg
 import numpy as np
 from pymongo import MongoClient
-from preflibtools.instances import PrefLibInstance
-
-import preflib_format
 
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
@@ -39,16 +31,17 @@ def getResultIntoDB_minOfavg_graphnnormal_diff_committeesize_p(p_list, committee
         committee_size_dict = {}
         result_list_dict_temp = {}
         for p in p_list:
+            g = graphCode.getGraph(p, len(voters))
             result_dict = gb_min_avg.minOfAvg_model_run_optimization(len(candidates),
                                                                      graphCode_Coefficient_MinAvg.getCoefficientMatrix(
                                                                          graphCode_Coefficient_MinAvg.getAdjacencyMatrix(
-                                                                             graphCode.getGraph(p, len(voters))),
+                                                                             g),
                                                                          function_code.borda_score_df_func(candidates,
                                                                                                            voters,
                                                                                                            preference_in_table),
                                                                          graphCode_Coefficient_MinAvg.getOneOverFv(
                                                                              graphCode.getFriendStructureList(
-                                                                                 graphCode.getGraph(p, len(voters))))),
+                                                                                 g))),
 
                                                                      committee_size)
 

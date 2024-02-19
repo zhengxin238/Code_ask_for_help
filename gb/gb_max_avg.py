@@ -1,9 +1,6 @@
 import gurobipy as gp
 from gurobipy import *
-import graphCode_Coefficient_MaxAvg
-import prefLibParse
-from function_code import borda_score_df_func
-import numpy as np
+
 
 # candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 # committee_size = 3

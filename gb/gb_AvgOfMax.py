@@ -1,7 +1,7 @@
 import gurobipy as gp
 from gurobipy import *
 
-import graphCode_Coefficient_AvgOfMax
+from coefficients import graphCode_Coefficient_AvgOfMax
 
 candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 committee_size = 3
@@ -102,7 +102,7 @@ def avgOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
                 constrains_objective_functions.append(obj)
                 m.addConstr(s_group[voterindex] <= obj, f"avgofmax_constraint_{i}")
         else:
-            m.addConstr(s_group[voterindex] == 0, "avgofmax_constraint_0}")
+            s_group[voterindex] = 0
     # Define the objective function as the sum of all variables
     objective_expr = s_group.sum() / num_variables_s
 

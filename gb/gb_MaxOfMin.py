@@ -1,8 +1,6 @@
 import gurobipy as gp
 from gurobipy import *
 
-import graphCode_Coefficient_MaxOfMin
-
 
 # candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 # committee_size =3
@@ -91,8 +89,18 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
             x_value_dict = m.getAttr('X', x_variables)
             optimal_solutions.append(x_value_dict)
             optimal_values.append(m.objVal)
-
+        if neighborofvoterv == []:
+            m = Model("mlp")
+            m.reset()
+            x_variables = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
+            m.addConstr(quicksum(x_variables[i] for i in range(num_vars_a)) == committee_size_a, "c2")
+            m.addConstr(quicksum(x_variables[i] for i in range(committee_size_a)) == committee_size_a, "c3")
+            m.optimize()
+            x_value_dict = m.getAttr('X', x_variables)
+            optimal_solutions.append(x_value_dict)
+            optimal_values.append(0)
         # Find the index of the maximum optimal value
+    if optimal_values != []:
         max_optimal_index = optimal_values.index(max(optimal_values))
         # Retrieve the solution corresponding to the maximum optimal value
         max_optimal_solution = optimal_solutions[max_optimal_index]
@@ -100,8 +108,11 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         # max_optimal_objective = corresponding_objectives[max_optimal_index]
         optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
         optimal_solution_dict["optimized_value"] = max(optimal_values)
+        print(optimal_solution_dict)
+        return optimal_solution_dict
+    else: pass
 
-    return optimal_solution_dict
+
 
 
 def dict_to_preflib_format(approval_data, directory, filename):

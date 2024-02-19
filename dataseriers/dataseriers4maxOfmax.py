@@ -1,10 +1,9 @@
-import gb_maxOfMax
-import graphCode_Coefficient_MaxOfMax
+from gb import gb_maxOfMax
+from coefficients import graphCode_Coefficient_MaxOfMax
 import prefLibParse
 import function_code
 import numpy as np
 from pymongo import MongoClient
-import preflib_format
 
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
@@ -34,10 +33,10 @@ def getResultIntoDB_maxOfmax_graphnnormal_diff_committeesize_p(p_list, committee
         result_list_dict_temp = {}
         for p in p_list:
             result_dict = gb_maxOfMax.maxOfMax_model_run_optimization(len(candidates),
-                                                         graphCode_Coefficient_MaxOfMax.getCoefficientMatrix(
+                                                                      graphCode_Coefficient_MaxOfMax.getCoefficientMatrix(
                                                              function_code.borda_score_df_func(candidates, voters,
                                                                                                preference_in_table)),
-                                                         committee_size)
+                                                                      committee_size)
 
             result_list_dict_temp[str((p))] = (result_dict)
         committee_size_dict[str(committee_size)] = result_list_dict_temp

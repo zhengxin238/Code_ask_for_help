@@ -1,12 +1,11 @@
-import gb_MaxOfMin
+from gb import gb_MaxOfMin
 import graphCode
-import graphCode_Coefficient_MaxOfMin
+from coefficients import graphCode_Coefficient_MaxOfMin
 
 import prefLibParse
 import function_code
 import numpy as np
 from pymongo import MongoClient
-import preflib_format
 
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
@@ -22,8 +21,8 @@ voters = list(
 preference_in_table = prefLibParse.getPreferenceList(url)
 
 # =====================================================
-p_list = np.arange(0.01, 0.02, 0.01).tolist()
-committee_size_list = np.arange(len(candidates)-1, len(candidates), 1).tolist()
+p_list = np.arange(0.01, 0.03, 0.01).tolist()
+committee_size_list = np.arange(1, len(candidates)-len(candidates)+3, 1).tolist()
 
 def getResultIntoDB_maxOfmin_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
                                                                preference_in_table, collection_db):
@@ -31,12 +30,13 @@ def getResultIntoDB_maxOfmin_graphnnormal_diff_committeesize_p(p_list, committee
         committee_size_dict = {}
         result_list_dict_temp = {}
         for p in p_list:
+            g = graphCode.getGraph(p, len(voters))
             result_dict = gb_MaxOfMin.maxOfMin_model_run_optimization(len(candidates),
-                                                          graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
+                                                                      graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
                                                               function_code.borda_score_df_func(candidates, voters,
                                                                                                 preference_in_table)),
-                                                          committee_size,
-                                                          graphCode_Coefficient_MaxOfMin.getNeighbors(graphCode.getGraph(p, len(voters))))
+                                                                      committee_size,
+                                                                      graphCode_Coefficient_MaxOfMin.getNeighbors(g))
 
             result_list_dict_temp[str((p))] = result_dict
         committee_size_dict[str(committee_size)] = result_list_dict_temp

@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-# Create a scale-free graph with 10 nodes and a new node attaching to 2 existing nodes for each new addition.
+# Create a scale-free graph with 10 nodes and a new node attaching to 2 existing nodes for each new addition. scale-free graph, small-world network, Erdős–Rényi (ER) random graph, caveman graph model
 scale_free_graph = nx.barabasi_albert_graph(10, 2)
 
 nx.draw(scale_free_graph, with_labels=False, node_size=30)
