@@ -82,10 +82,10 @@ def maxOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
     # List to store optimal solutions
     optimal_solutions = []
     optimal_solution_dict = {}
+    optimal_solution_dict_t = {}
     # List to store optimal values
     optimal_values = []
-    # List to store corresponding objective functions
-    corresponding_objectives = []
+
 
     m.addConstr(gp.quicksum(x[j] for j in range(num_vars_a)) == committee_size_a, "sum_constraint")
     # Iteratively optimize each objective function
@@ -104,15 +104,16 @@ def maxOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
         optimal_solution_dict_temp = {}
         for v in m.getVars():
             optimal_solution_dict_temp[v.varName] = v.x
-        optimal_solution_dict[i] = optimal_solution_dict_temp
+        optimal_solution_dict_t[i] = optimal_solution_dict_temp
         optimal_values.append(m.objVal)
-        corresponding_objectives.append(i)
+
     # Find the index of the maximum optimal value
     max_optimal_index = optimal_values.index(max(optimal_values))
     # Retrieve the solution corresponding to the maximum optimal value
-    max_optimal_solution = optimal_solutions[max_optimal_index]
-    max_optimal_objective = corresponding_objectives[max_optimal_index]
-    return  optimal_solution_dict[max_optimal_objective]
+
+    optimal_solution_dict["final_committee"] = optimal_solution_dict_t[max_optimal_index]
+    optimal_solution_dict["optimized_value"] = max(optimal_values)
+    return  optimal_solution_dict
 
 
 # m = avgOfAvg_model(num_vars,coeff,4)

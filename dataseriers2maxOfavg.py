@@ -15,7 +15,7 @@ from preflibtools.instances import PrefLibInstance
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
 db = client['votingdb']
-collection = db['MaxOfAvg00015-00000001']
+collection = db['NewMaxOfAvg00015-00000001']
 # =====================================================
 # the input information
 
@@ -27,8 +27,8 @@ voters = list(
 preference_in_table = prefLibParse.getPreferenceList(r"https://www.preflib.org/static/data/cleanweb/00015-00000001.soc")
 
 # =====================================================
-p_list = np.arange(0.01, 1.01, 0.01).tolist()
-committee_size_list = np.arange(1, len(candidates), 1).tolist()
+p_list = np.arange(0.99, 1.01, 0.01).tolist()
+committee_size_list = np.arange(1, len(candidates)-len(candidates)+3, 1).tolist()
 
 
 def getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
@@ -47,17 +47,13 @@ def getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee
                                                                                  graphCode.getGraph(p, len(voters))))),
                                                                      committee_size)
             collection_db.insert_one(result_dict)
+            print(result_dict)
 
     return None
 
-n=0
-for committee_size in committee_size_list:
-    for p in p_list:
-        n+=1
-print(n)
 
-# getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
-#                                                            preference_in_table, collection)
+getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
+                                                           preference_in_table, collection)
 # # committee_size = 4
 # p = 0.7
 #

@@ -12,7 +12,7 @@ from preflibtools.instances import PrefLibInstance
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
 db = client['votingdb']
-collection = db['AvgOfAvg00015-00000002']
+collection = db['AvgOfAvg']
 # =====================================================
 # the input information
 url = r"https://www.preflib.org/static/data/cleanweb/00015-00000002.soc"
@@ -23,8 +23,8 @@ voters = list(
 preference_in_table = prefLibParse.getPreferenceList(url)
 
 # =====================================================
-p_list = np.arange(0.01, 1.01, 0.01).tolist()
-committee_size_list = np.arange(1, len(candidates), 1).tolist()
+p_list = np.arange(0.99, 1.01, 0.01).tolist()
+committee_size_list = np.arange(1, len(candidates)-len(candidates)+3, 1).tolist()
 
 
 def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
@@ -32,21 +32,14 @@ def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee
     for committee_size in committee_size_list:
         for p in p_list:
             g = graphCode.getGraph(p, len(voters))
-            result_dict = gb_avg_avg.avgOfAvg_model_run_optimization((len(candidates),
-                                                                                graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
-                                                                                    function_code.borda_score_df_func(
-                                                                                        candidates,
-                                                                                        voters,
-                                                                                        preference_in_table),
-                                                                                    graphCode_Coefficient_AvgAvg.getStepOneVector(
-                                                                                        g,
-                                                                                        graphCode_Coefficient_AvgAvg.getAdjacencyMatrix(
-                                                                                            g),
-                                                                                        graphCode_Coefficient_AvgAvg.getOneOverFv(
-                                                                                            graphCode.getFriendStructureList(
-                                                                                                g)))),
-                                                                                committee_size))
+            result_dict = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates),graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(function_code.borda_score_df_func(candidates, voters, preference_in_table),
+                                                          graphCode_Coefficient_AvgAvg.getStepOneVector(g,
+                                                                                                        graphCode_Coefficient_AvgAvg.getAdjacencyMatrix(
+                                                                                                            g),
+                                                                                                        graphCode_Coefficient_AvgAvg.getOneOverFv(
+                                                                                                            graphCode.getFriendStructureList(g)))),committee_size,voters)
             collection_db.insert_one(result_dict)
+            print((result_dict))
 
     return None
 

@@ -43,13 +43,13 @@ coeff = [15.33333333333333, 16.333333333333332, 13.666666666666664, 14, 15.66666
 # for i in range(num_vars):
 #     print(i)
 
-def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa):
+def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voters_aa):
     m = Model("mlp")
     x_dic = {}
     for i in range(num_vars_aa):
         x_dic[i] = m.addVar(name=f'x_{i}', vtype=GRB.BINARY)
     objective_expression = quicksum(coeff_aa[i] * x_dic[i] for i in range(num_vars_aa))
-    obj = m.setObjective(objective_expression, GRB.MAXIMIZE)
+    obj = m.setObjective(objective_expression/len(voters_aa), GRB.MAXIMIZE)
     m.addConstr(quicksum(x_dic[i] for i in range(num_vars_aa)) == committee_size_aa, "c2")
     m.optimize()
     if m.status == GRB.OPTIMAL:
@@ -59,7 +59,7 @@ def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa):
             optimal_solution[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution
         optimal_solution_dict["optimized_value"] = m.objVal
-    return m
+    return optimal_solution_dict
 
 # m = avgOfAvg_model(num_vars,coeff,4)
 
