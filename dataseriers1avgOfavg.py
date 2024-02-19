@@ -32,7 +32,7 @@ def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee
     for committee_size in committee_size_list:
         for p in p_list:
             g = graphCode.getGraph(p, len(voters))
-            result_dict = gb_avg_avg.run_optimization(gb_avg_avg.avgOfAvg_model(len(candidates),
+            result_dict = gb_avg_avg.avgOfAvg_model_run_optimization((len(candidates),
                                                                                 graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
                                                                                     function_code.borda_score_df_func(
                                                                                         candidates,

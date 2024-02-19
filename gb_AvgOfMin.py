@@ -112,7 +112,7 @@ def avgOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         pass
 
 
-avgOfMin_model_run_optimization(num_vars, coeff, committee_size, list_of_neighbors)
+# avgOfMin_model_run_optimization(num_vars, coeff, committee_size, list_of_neighbors)
 
 # client = MongoClient('localhost', 27017)
 # db = client['votingdb']
