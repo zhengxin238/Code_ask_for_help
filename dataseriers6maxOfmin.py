@@ -25,9 +25,6 @@ preference_in_table = prefLibParse.getPreferenceList(url)
 p_list = np.arange(0.01, 0.02, 0.01).tolist()
 committee_size_list = np.arange(len(candidates)-1, len(candidates), 1).tolist()
 
-
-
-
 def getResultIntoDB_maxOfmin_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
                                                                preference_in_table, collection_db):
     for committee_size in committee_size_list:

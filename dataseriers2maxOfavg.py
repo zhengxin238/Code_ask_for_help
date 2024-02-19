@@ -33,6 +33,8 @@ committee_size_list = np.arange(1, len(candidates)-len(candidates)+3, 1).tolist(
 
 def getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
                                                                preference_in_table, collection_db):
+    committee_size_dict = {}
+    result_list_dict_temp = {}
     for committee_size in committee_size_list:
         for p in p_list:
             result_dict = gb_max_avg.maxOfAvg_model_run_optimization(len(candidates),
@@ -46,8 +48,9 @@ def getResultIntoDB_maxOfavg_graphnnormal_diff_committeesize_p(p_list, committee
                                                                              graphCode.getFriendStructureList(
                                                                                  graphCode.getGraph(p, len(voters))))),
                                                                      committee_size)
-            collection_db.insert_one(result_dict)
-            print(result_dict)
+            result_list_dict_temp[str((p))] = result_dict
+        committee_size_dict[str(committee_size)] = result_list_dict_temp
+        collection_db.insert_one(committee_size_dict)
 
     return None
 

@@ -24,8 +24,6 @@ preference_in_table = prefLibParse.getPreferenceList(url)
 p_list = np.arange(0.01, 1.00, 0.01).tolist()
 committee_size_list = np.arange(1, len(candidates), 1).tolist()
 
-# Construct the directory path
-directory = r"D:\data_collections_preflib\Min_Min"
 
 
 def getResultIntoDB_minOfmin_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
@@ -41,8 +39,6 @@ def getResultIntoDB_minOfmin_graphnnormal_diff_committeesize_p(p_list, committee
                                                                                                             preference_in_table)),
                                                                       committee_size)
 
-            gb_minOfMin.dict_to_preflib_format(result_dict["final_committee"], directory,
-                                               f"00009-00000001_{committee_size}_{p}.txt")
             result_list_dict_temp[str((p))] = result_dict
         committee_size_dict[str(committee_size)] = result_list_dict_temp
         collection_db.insert_one(committee_size_dict)
