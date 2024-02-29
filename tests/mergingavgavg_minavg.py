@@ -13,8 +13,8 @@ from pymongo import MongoClient
 
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
-db = client['DataTest_Voting']
-collection = db['all_methods_000015-00000001']
+db = client['avgavg_minavg']
+collection = db['000015-00000001_1']
 # =====================================================
 # the input information
 url = r"https://www.preflib.org/static/data/cleanweb/00015-00000001.soc"
@@ -36,7 +36,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
         result_list_dict_temp = {}
         for p in p_list:
             g = graphCode.getGraph(p, len(voters))
-            output_file = f"random_graph_avgavg_minavg_{committee_size}_{p}"
+            output_file = f"random_graph_avgavg_minavg_{p}"
             nx.write_graphml(g, output_file)
             result_dict_avg_avg = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates),
                                                                              graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
@@ -50,17 +50,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                              graphCode_Coefficient_AvgAvg.getOneOverFv(
                                                                                  graphCode.getFriendStructureList(g)))),
                                                                              committee_size, voters)
-            result_dict_max_avg = gb_max_avg.maxOfAvg_model_run_optimization(len(candidates),
-                                                                             graphCode_Coefficient_MaxAvg.getCoefficientMatrix(
-                                                                         graphCode_Coefficient_MaxAvg.getAdjacencyMatrix(
-                                                                             g),
-                                                                         function_code.borda_score_df_func(candidates,
-                                                                                                           voters,
-                                                                                                           preference_in_table),
-                                                                         graphCode_Coefficient_MaxAvg.getOneOverFv(
-                                                                             graphCode.getFriendStructureList(
-                                                                                 g))),
-                                                                             committee_size)
+
 
             result_dict_min_avg = gb_min_avg.minOfAvg_model_run_optimization(len(candidates),
                                                                              graphCode_Coefficient_MinAvg.getCoefficientMatrix(
@@ -75,64 +65,11 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
                                                                              committee_size)
 
-            result_dict_max_max = gb_maxOfMax.maxOfMax_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_MaxOfMax.getCoefficientMatrix(
-                                                                          function_code.borda_score_df_func(candidates,
-                                                                                                            voters,
-                                                                                                            preference_in_table)),
-                                                                              committee_size)
 
-            result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
-                                                                          function_code.borda_score_df_func(candidates,
-                                                                                                            voters,
-                                                                                                            preference_in_table)),
-                                                                              committee_size)
-
-            result_dict_max_min = gb_MaxOfMin.maxOfMin_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
-                                                                          function_code.borda_score_df_func(candidates,
-                                                                                                            voters,
-                                                                                                            preference_in_table)),
-                                                                              committee_size,
-                                                                              graphCode_Coefficient_MaxOfMin.getNeighbors(g))
-
-            result_dict_min_max = gb_MinOfMax.minOfMax_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_MinOfMax.getCoefficientMatrix(
-                                                                          function_code.borda_score_df_func(candidates,
-                                                                                                            voters,
-                                                                                                            preference_in_table)),
-                                                                              committee_size,
-                                                                              graphCode_Coefficient_MinOfMax.getNeighbors(g),
-                                                                              len(candidates) * 2)
-
-            result_dict_avg_min = gb_AvgOfMin.avgOfMin_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_AvgOfMin.getCoefficientMatrix(
-                                                                          function_code.borda_score_df_func(candidates,
-                                                                                                            voters,
-                                                                                                            preference_in_table)),
-                                                                              committee_size,
-                                                                              graphCode_Coefficient_AvgOfMin.getNeighbors(g))
-
-            result_dict_avg_max = gb_AvgOfMax.avgOfMax_model_run_optimization(len(candidates),
-                                                                              graphCode_Coefficient_AvgOfMax.getCoefficientMatrix(
-                                                                                  function_code.borda_score_df_func(
-                                                                                      candidates,
-                                                                                      voters,
-                                                                                      preference_in_table)),
-                                                                              committee_size,
-                                                                              graphCode_Coefficient_AvgOfMax.getNeighbors(
-                                                                                  g), len(candidates) * 2)
             result_list_dict_temp[str((p))]={}
             result_list_dict_temp[str((p))]["avg_avg"] = result_dict_avg_avg
-            result_list_dict_temp[str((p))]["max_avg"] = result_dict_max_avg
             result_list_dict_temp[str((p))]["min_avg"] = result_dict_min_avg
-            result_list_dict_temp[str((p))]["max_max"] = result_dict_max_max
-            result_list_dict_temp[str((p))]["min_min"] = result_dict_min_min
-            result_list_dict_temp[str((p))]["max_min"] = result_dict_max_min
-            result_list_dict_temp[str((p))]["min_max"] = result_dict_min_max
-            result_list_dict_temp[str((p))]["avg_min"] = result_dict_avg_min
-            result_list_dict_temp[str((p))]["avg_max"] = result_dict_avg_max
+
 
         committee_size_dict[str(committee_size)] = result_list_dict_temp
         collection_db.insert_one(committee_size_dict)

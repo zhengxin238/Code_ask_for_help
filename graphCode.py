@@ -15,8 +15,9 @@ def getGraph(p, n):
                 R = random.random()
                 if (R < p):
                     g.add_edge(i, j)
-        pos = nx.circular_layout(g)
+        # pos = nx.circular_layout(g)
     return g
+
 
 
 # g = nx.Graph()

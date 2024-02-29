@@ -26,19 +26,23 @@ committee_size_list = np.arange(1, len(candidates) - 1, 1).tolist()
 
 def getResultIntoDB_avgOfavg_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
                                                                preference_in_table, collection_db):
-
-
     for committee_size in committee_size_list:
         committee_size_dict = {}
+        result_list_dict_temp = {}
         for p in p_list:
-            result_list_dict_temp = {}
             g = graphCode.getGraph(p, len(voters))
-            result_dict = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates), graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(function_code.borda_score_df_func(candidates, voters, preference_in_table),
-                                                                                                                                       graphCode_Coefficient_AvgAvg.getStepOneVector(g,
-                                                                                                                                                                                     graphCode_Coefficient_AvgAvg.getAdjacencyMatrix(
-                                                                                                            g),
-                                                                                                                                                                                     graphCode_Coefficient_AvgAvg.getOneOverFv(
-                                                                                                            graphCode.getFriendStructureList(g)))), committee_size, voters)
+            result_dict = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates),
+                                                                     graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
+                                                                         function_code.borda_score_df_func(candidates,
+                                                                                                           voters,
+                                                                                                           preference_in_table),
+                                                                         graphCode_Coefficient_AvgAvg.getStepOneVector(
+                                                                             g,
+                                                                             graphCode_Coefficient_AvgAvg.getAdjacencyMatrix(
+                                                                                 g),
+                                                                             graphCode_Coefficient_AvgAvg.getOneOverFv(
+                                                                                 graphCode.getFriendStructureList(g)))),
+                                                                     committee_size, voters)
             result_list_dict_temp[str((p))] = result_dict
         committee_size_dict[str(committee_size)] = result_list_dict_temp
         collection_db.insert_one(committee_size_dict)
