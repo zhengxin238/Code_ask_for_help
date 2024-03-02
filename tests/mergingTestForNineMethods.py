@@ -14,16 +14,18 @@ db = client['DataTest_Voting']
 collection = db['all_methods_00009-00000001']
 # =====================================================
 # the input information
-url = r"https://www.preflib.org/static/data/agh/00009-00000001.soc"
-candidates = list(range(1, (
-        prefLibParse.getNumberOfAlternatives(url) + 1)))
-voters = list(
-    range(1, (prefLibParse.getNumberOfVoters(url) + 1)))
-preference_in_table = prefLibParse.getPreferenceList(url)
 
 # =====================================================
-p_list = np.arange(0.8, 1.0, 0.1).tolist()
-committee_size_list = np.arange(1, len(candidates), 1).tolist()
+# url = r"https://www.preflib.org/static/data/agh/00009-00000001.soc"
+# candidates = list(range(1, (
+#         prefLibParse.getNumberOfAlternatives(url) + 1)))
+# voters = list(
+#     range(1, (prefLibParse.getNumberOfVoters(url) + 1)))
+# preference_in_table = prefLibParse.getPreferenceList(url)
+#
+# # =====================================================
+# p_list = np.arange(0.8, 1.0, 0.1).tolist()
+# committee_size_list = np.arange(1, len(candidates), 1).tolist()
 
 
 def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
@@ -138,9 +140,15 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
     return None
 
+def runTestAll(url):
+    getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(np.arange(0.1, 1.0, 0.1).tolist(), np.arange(1, len(list(range(1, (
+        prefLibParse.getNumberOfAlternatives(url) + 1)))), 1).tolist(), list(range(1, (
+        prefLibParse.getNumberOfAlternatives(url) + 1))), list(
+    range(1, (prefLibParse.getNumberOfVoters(url) + 1))),
+                                                           prefLibParse.getPreferenceList(url), db['all_methods_00009-00000001'])
+    return None
 
-getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
-                                                           preference_in_table, collection)
+runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc")
 # #
 # committee_size = 4
 # p = 0.7

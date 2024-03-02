@@ -1,9 +1,8 @@
 import random
 import networkx as nx
-import matplotlib.pyplot as plt
+
 import numpy as np
-import scipy as sp
-import function_code
+
 
 
 def getGraph(p, n):
