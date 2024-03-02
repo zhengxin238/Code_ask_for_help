@@ -62,6 +62,8 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
     for neighborofvoterv in list_of_neighbors_a:
         if neighborofvoterv != []:
             m = Model("mlp")
+            # Set the time limit (e.g., 300 seconds)
+            m.Params.TimeLimit = 300
             m.reset()
             num_variables_group1 = num_vars_a
             x_variables = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
@@ -115,11 +117,11 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
 
 
 
-def dict_to_preflib_format(approval_data, directory, filename):
-    full_path = os.path.join(directory, filename)
-    with open(full_path, 'w') as f:
-        for candidate, approval in approval_data.items():
-            if approval == 1:
-                f.write(candidate + '\n')
+# def dict_to_preflib_format(approval_data, directory, filename):
+#     full_path = os.path.join(directory, filename)
+#     with open(full_path, 'w') as f:
+#         for candidate, approval in approval_data.items():
+#             if approval == 1:
+#                 f.write(candidate + '\n')
 
 # print(maxOfMin_model_run_optimization(num_vars, coeff, committee_size, list_of_neighbors))

@@ -1,7 +1,13 @@
 import gurobipy as gp
+import networkx as nx
 from gurobipy import *
 
+import prefLibParse
 from coefficients import graphCode_Coefficient_AvgOfMax
+import function_code
+import graphCode
+
+import matplotlib.pyplot as plt
 
 # candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 # committee_size = 3
@@ -63,10 +69,30 @@ from coefficients import graphCode_Coefficient_AvgOfMax
 #     optimal_solution_dict["optimized_value"] = m.objVal
 #     print(optimal_solution_dict)
 
-
+# url = r"https://www.preflib.org/static/data/agh/00009-00000001.soc"
+# candidates = list(range(1, (
+#         prefLibParse.getNumberOfAlternatives(url) + 1)))
+# voters = list(
+#     range(1, (prefLibParse.getNumberOfVoters(url) + 1)))
+# preference_in_table = prefLibParse.getPreferenceList(url)
+#
+# num_vars = len(candidates)
+# committee_size = 6
+#
+#
+# df_bordaScore = function_code.borda_score_df_func(candidates, voters, preference_in_table)
+# coeff = graphCode_Coefficient_AvgOfMax.getCoefficientMatrix(df_bordaScore)
+# g = graphCode.getGraph(0.05, len(voters))
+# nx.draw(g, with_labels=True)
+# plt.show()
+# list_of_neighbors = graphCode.getFriendStructureList(g)
+# m_value = len(candidates)*len(voters)
+# ================================================================================
 def avgOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a, m_value_a):
     optimal_solution_dict = {}
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 60
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 
@@ -117,7 +143,13 @@ def avgOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         print(optimal_solution_dict)
         return optimal_solution_dict
     else:
-        pass
+        best_solution = m.getVars()
+        x_value_dict = m.getAttr('X', x_group1)
+        max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
+        optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
+        optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
+        return optimal_solution_dict
 
 
 # avgOfMax_model_run_optimization(num_vars, coeff, committee_size, list_of_neighbors, m_value)

@@ -67,6 +67,8 @@ from gurobipy import *
 def maxOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
 
     m = Model("max_of_max_objectives")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
 
     objective_functions = []
@@ -89,7 +91,7 @@ def maxOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
     for i, obj_func in enumerate(objective_functions):
         # Clear the model to reset for each iteration
         m.reset()
-
+        m.Params.TimeLimit = 120
         # Set the current objective function
         m.setObjective(obj_func, sense=GRB.MAXIMIZE)
 

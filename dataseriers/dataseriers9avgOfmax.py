@@ -20,8 +20,8 @@ voters = list(
 preference_in_table = prefLibParse.getPreferenceList(url)
 
 # =====================================================
-p_list = np.arange(0.01, 0.03, 0.01).tolist()
-committee_size_list = np.arange(1, len(candidates) - len(candidates) + 3, 1).tolist()
+p_list = np.arange(0.1, 1, 0.1).tolist()
+committee_size_list = np.arange(1, len(candidates) , 1).tolist()
 
 
 def getResultIntoDB_avgOfmax_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,

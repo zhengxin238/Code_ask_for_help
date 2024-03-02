@@ -8,6 +8,8 @@ from coefficients import graphCode_Coefficient_MaxOfMax
 def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
     optimal_solution_dict = {}
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
     objective_functions = []
     for i in range(coeff_a.shape[0]):

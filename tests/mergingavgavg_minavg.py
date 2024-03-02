@@ -14,10 +14,10 @@ from pymongo import MongoClient
 # pd.set_option('display.max_columns', None)
 client = MongoClient('localhost', 27017)
 db = client['avgavg_minavg']
-collection = db['000015-00000001_1']
+collection = db['00009-00000001_0229']
 # =====================================================
 # the input information
-url = r"https://www.preflib.org/static/data/cleanweb/00015-00000001.soc"
+url = r"https://www.preflib.org/static/data/agh/00009-00000001.soc"
 candidates = list(range(1, (
         prefLibParse.getNumberOfAlternatives(url) + 1)))
 voters = list(

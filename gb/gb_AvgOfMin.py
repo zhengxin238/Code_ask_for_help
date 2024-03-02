@@ -62,6 +62,8 @@ def avgOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
     optimal_solution_dict = {}
 
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
     # Introduce 2D variables
@@ -111,7 +113,12 @@ def avgOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         print(optimal_solution_dict)
         return optimal_solution_dict
     else:
-        pass
+        x_value_dict = m.getAttr('X', x_group1)
+        max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
+        optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
+        optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
+        return optimal_solution_dict
 
 # avgOfMin_model_run_optimization(num_vars, coeff, committee_size, list_of_neighbors)
 

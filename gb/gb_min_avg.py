@@ -49,6 +49,8 @@ from gurobipy import *
 
 def minOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
 
     objective_functions = []
@@ -81,7 +83,13 @@ def minOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
                 optimal_solution_dict_temp[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution_dict_temp
         optimal_solution_dict["optimized_value"] = m.objVal
-
+    else:
+        optimal_solution_dict_temp = {}
+        for v in m.getVars():
+            if v.varName != "min_of_avg":
+                optimal_solution_dict_temp[v.varName] = v.x
+        optimal_solution_dict["final_committee"] = optimal_solution_dict_temp
+        optimal_solution_dict["optimized_value"] = m.objVal
     return optimal_solution_dict
 
 # minOfAvg_model_run_optimization(num_vars, coeff, committee_size)

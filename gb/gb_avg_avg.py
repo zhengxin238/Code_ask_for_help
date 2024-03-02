@@ -9,13 +9,13 @@ preference_in_table = prefLibParse.getPreferenceList(r"https://www.preflib.org/s
 friend_structure_list = graphCode.getFriendStructureList(0.05, prefLibParse.getNumberOfVoters(
     r"https://www.preflib.org/static/data/agh/00009-00000001.soc"))"""
 
-candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
-committee_size = 4
-#
-# m = Model("mlp")
-num_vars =len(candidates)
-#
-coeff = [15.33333333333333, 16.333333333333332, 13.666666666666664, 14, 15.666666666666664, 15]
+# candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
+# committee_size = 4
+# #
+# # m = Model("mlp")
+# num_vars =len(candidates)
+# #
+# coeff = [15.33333333333333, 16.333333333333332, 13.666666666666664, 14, 15.666666666666664, 15]
 #
 # """variables = m.addVars(num_vars, vtype=gp.GRB.BINARY)"""
 #
@@ -40,6 +40,8 @@ coeff = [15.33333333333333, 16.333333333333332, 13.666666666666664, 14, 15.66666
 
 def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voters_aa):
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     # x_dic = {}
     # for i in range(num_vars_aa):
     #     x_dic[i] = m.addVar(name=f'x', vtype=GRB.BINARY)
@@ -55,7 +57,15 @@ def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voter
             optimal_solution[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution
         optimal_solution_dict["optimized_value"] = m.objVal
-    return optimal_solution_dict
+        return optimal_solution_dict
+    else:
+        optimal_solution_dict = {}
+        optimal_solution = {}
+        for v in m.getVars():
+            optimal_solution[v.varName] = v.x
+        optimal_solution_dict["final_committee"] = optimal_solution
+        optimal_solution_dict["optimized_value"] = m.objVal
+        return optimal_solution_dict
 
 # m = avgOfAvg_model(num_vars,coeff,4)
 

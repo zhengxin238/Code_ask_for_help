@@ -46,6 +46,8 @@ from gurobipy import *
 
 def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
     m = Model("mlp")
+    # Set the time limit (e.g., 300 seconds)
+    m.Params.TimeLimit = 300
     x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
     objective_functions = []
 
@@ -75,11 +77,13 @@ def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
                 temp[v.varName] = v.x
         optimal_solution_dict["final_committee"] = temp
         optimal_solution_dict["optimized_value"] = m.objVal
+
+    else:
+        temp = {}
+        for v in m.getVars():
+            if v.varName != 'min_of_min':
+                temp[v.varName] = v.x
+        optimal_solution_dict["final_committee"] = temp
+        optimal_solution_dict["optimized_value"] = m.objVal
     return optimal_solution_dict
 
-def dict_to_preflib_format(approval_data, directory, filename):
-    full_path = os.path.join(directory, filename)
-    with open(full_path, 'w') as f:
-        for candidate, approval in approval_data.items():
-            if approval == 1:
-                f.write(candidate + '\n')
