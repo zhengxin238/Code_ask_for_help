@@ -1,9 +1,7 @@
 from gb import gb_MaxOfMin
-import graphCode
+from basic_functions import graphCode, prefLibParse, function_code
 from coefficients import graphCode_Coefficient_MaxOfMin
 
-import prefLibParse
-import function_code
 import numpy as np
 from pymongo import MongoClient
 

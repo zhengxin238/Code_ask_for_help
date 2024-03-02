@@ -1,8 +1,7 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
-import numpy as np
-import function_code
+
 
 # candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 # voters = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6']

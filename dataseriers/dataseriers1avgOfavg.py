@@ -1,6 +1,4 @@
-import prefLibParse
-import graphCode
-import function_code
+from basic_functions import graphCode, prefLibParse, function_code
 from coefficients import graphCode_Coefficient_AvgAvg
 from gb import gb_avg_avg
 import numpy as np

@@ -1,13 +1,6 @@
 import gurobipy as gp
-import networkx as nx
 from gurobipy import *
 
-import prefLibParse
-from coefficients import graphCode_Coefficient_AvgOfMax
-import function_code
-import graphCode
-
-import matplotlib.pyplot as plt
 
 # candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
 # committee_size = 3

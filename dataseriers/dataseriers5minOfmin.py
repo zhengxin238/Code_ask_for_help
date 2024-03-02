@@ -1,7 +1,6 @@
 from gb import gb_minOfMin
 from coefficients import graphCode_Coefficient_MinOfMin
-import prefLibParse
-import function_code
+from basic_functions import prefLibParse, function_code
 import numpy as np
 from pymongo import MongoClient
 

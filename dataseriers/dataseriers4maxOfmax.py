@@ -1,7 +1,6 @@
 from gb import gb_maxOfMax
 from coefficients import graphCode_Coefficient_MaxOfMax
-import prefLibParse
-import function_code
+from basic_functions import prefLibParse, function_code
 import numpy as np
 from pymongo import MongoClient
 

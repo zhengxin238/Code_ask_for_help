@@ -1,13 +1,10 @@
 import networkx as nx
 
-from gb import gb_min_avg, gb_AvgOfMin, gb_AvgOfMax, gb_minOfMin, gb_maxOfMax, gb_max_avg, gb_avg_avg, gb_MaxOfMin, \
+from gb import gb_min_avg, gb_AvgOfMin, gb_minOfMin, gb_maxOfMax, gb_max_avg, gb_avg_avg, gb_MaxOfMin, \
     gb_MinOfMax
-import graphCode
-from coefficients import graphCode_Coefficient_MinOfMax, graphCode_Coefficient_MaxOfMin, graphCode_Coefficient_AvgOfMax, \
-    graphCode_Coefficient_MaxAvg, graphCode_Coefficient_MinAvg, graphCode_Coefficient_MinOfMin, \
+from basic_functions import graphCode, prefLibParse, function_code
+from coefficients import graphCode_Coefficient_MinOfMax, graphCode_Coefficient_MaxOfMin, graphCode_Coefficient_MaxAvg, graphCode_Coefficient_MinAvg, graphCode_Coefficient_MinOfMin, \
     graphCode_Coefficient_AvgAvg, graphCode_Coefficient_AvgOfMin, graphCode_Coefficient_MaxOfMax
-import prefLibParse
-import function_code
 import numpy as np
 from pymongo import MongoClient
 

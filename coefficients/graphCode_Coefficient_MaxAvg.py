@@ -1,8 +1,7 @@
 import random
 import networkx as nx
-import matplotlib.pyplot as plt
 import numpy as np
-import function_code
+
 
 # the input information
 #

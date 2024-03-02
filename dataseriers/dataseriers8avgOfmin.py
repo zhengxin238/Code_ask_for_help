@@ -1,8 +1,6 @@
 from gb import gb_AvgOfMin
-import graphCode
+from basic_functions import graphCode, prefLibParse, function_code
 from coefficients import graphCode_Coefficient_AvgOfMin
-import prefLibParse
-import function_code
 import numpy as np
 from pymongo import MongoClient
 

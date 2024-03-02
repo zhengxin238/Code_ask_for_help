@@ -1,8 +1,6 @@
 from gb import gb_max_avg
 from coefficients import graphCode_Coefficient_MaxAvg
-import prefLibParse
-import graphCode
-import function_code
+from basic_functions import graphCode, prefLibParse, function_code
 import numpy as np
 from pymongo import MongoClient
 
