@@ -4,7 +4,7 @@ from gb import gb_min_avg, gb_AvgOfMin, gb_minOfMin, gb_maxOfMax, gb_max_avg, gb
     gb_MinOfMax, gb_AvgOfMax
 from basic_functions import graphCode, prefLibParse, function_code
 from coefficients import graphCode_Coefficient_MinOfMax, graphCode_Coefficient_MaxOfMin, graphCode_Coefficient_MaxAvg, graphCode_Coefficient_MinAvg, graphCode_Coefficient_MinOfMin, \
-    graphCode_Coefficient_AvgAvg, graphCode_Coefficient_AvgOfMin, graphCode_Coefficient_MaxOfMax
+    graphCode_Coefficient_AvgAvg, graphCode_Coefficient_AvgOfMin, graphCode_Coefficient_MaxOfMax, graphCode_Coefficient_AvgOfMax
 import numpy as np
 from pymongo import MongoClient
 
