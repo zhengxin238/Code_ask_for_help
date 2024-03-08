@@ -44,46 +44,107 @@ from gurobipy import *
 #         print(f"{v.varName}: {v.x}")
 
 
-def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
-    m = Model("mlp")
-    # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 300
-    x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
-    objective_functions = []
 
-    for i in range(coeff_a.shape[0]):
-        coeff_vector = coeff_a[i, :]
-        obj = gp.LinExpr()
-        for j in range(num_vars_a):
-            obj += coeff_vector[j] * x[j]
-        objective_functions.append(obj)
 
-    # Introduce a new variable representing the minimum of the minimum values
-    min_of_min = m.addVar(vtype=GRB.CONTINUOUS, name="min_of_min")
-    # Add constraints to ensure that min_of_min is less than or equal to each objective
-    for i, obj_func in enumerate(objective_functions):
-        m.addConstr(min_of_min <= obj_func, f"min_constraint_{i}")
-
-    m.addConstr(quicksum(x[i] for i in range(num_vars_a)) == committee_size_a, "c2")
-
-    m.setObjective(min_of_min, sense=GRB.MAXIMIZE)
-
-    m.optimize()
+def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a):
+    optimal_solutions = []
+    optimal_values = []
     optimal_solution_dict = {}
-    if m.status == GRB.OPTIMAL:
-        temp = {}
-        for v in m.getVars():
-            if v.varName != 'min_of_min':
-                temp[v.varName] = v.x
-        optimal_solution_dict["final_committee"] = temp
-        optimal_solution_dict["optimized_value"] = m.objVal
 
-    else:
-        temp = {}
-        for v in m.getVars():
-            if v.varName != 'min_of_min':
-                temp[v.varName] = v.x
-        optimal_solution_dict["final_committee"] = temp
-        optimal_solution_dict["optimized_value"] = m.objVal
-    return optimal_solution_dict
+    for neighborofvoterv in list_of_neighbors_a:
+        if neighborofvoterv != []:
+            m = Model("mlp")
+            # Set the time limit (e.g., 300 seconds)
+            m.Params.TimeLimit = 300
+            m.reset()
+            num_variables_group1 = num_vars_a
+            x_variables = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
+            num_variables_group2 = len(neighborofvoterv)
+            a_group = m.addVars(num_variables_group2, vtype=GRB.BINARY, name="a")
+            constrains_objective_functions = []
+            for i in range(0, len(neighborofvoterv)):
+                coeff_vector = coeff_a[(neighborofvoterv[i] - 1), :]
+                obj = gp.LinExpr()
+                for j in range(num_vars_a):
+                    obj += coeff_vector[j] * x_variables[j]
+                constrains_objective_functions.append(obj)
+        # Introduce a new variable s
+            s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
+        # Add constraints to ensure that min_of_max is less than or equal to each objective
+            for i, obj_func in enumerate(constrains_objective_functions):
+                m.addConstr(s <= obj_func, f"max_constraint_{i}")
+
+            m.addConstr(quicksum(x_variables[i] for i in range(num_vars_a)) == committee_size_a, "c2")
+            m.addConstr(quicksum(a_group[i] for i in range(len(neighborofvoterv))) == 1, "c3")
+
+            m.setObjective(s, sense=GRB.MAXIMIZE)
+            m.optimize()
+
+            x_value_dict = m.getAttr('X', x_variables)
+            optimal_solutions.append(x_value_dict)
+            optimal_values.append(m.objVal)
+        if neighborofvoterv == []:
+            m = Model("mlp")
+            m.reset()
+            x_variables = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
+            m.addConstr(quicksum(x_variables[i] for i in range(num_vars_a)) == committee_size_a, "c2")
+            m.addConstr(quicksum(x_variables[i] for i in range(committee_size_a)) == committee_size_a, "c3")
+            m.optimize()
+            x_value_dict = m.getAttr('X', x_variables)
+            optimal_solutions.append(x_value_dict)
+            optimal_values.append(0)
+        # Find the index of the maximum optimal value
+    if optimal_values != []:
+        min_optimal_index = optimal_values.index(min(optimal_values))
+        # Retrieve the solution corresponding to the maximum optimal value
+        max_optimal_solution = optimal_solutions[min_optimal_index]
+        max_optimal_solution_formatted = {f'x[{k}]': v for k, v in max_optimal_solution.items()}
+        # max_optimal_objective = corresponding_objectives[max_optimal_index]
+        optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
+        optimal_solution_dict["optimized_value"] = min(optimal_values)
+        print(optimal_solution_dict)
+        return optimal_solution_dict
+
+# def (num_vars_a, coeff_a, committee_size_a):
+#     m = Model("mlp")
+#     # Set the time limit (e.g., 300 seconds)
+#     m.Params.TimeLimit = 300
+#     x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
+#     objective_functions = []
+#
+#     for i in range(coeff_a.shape[0]):
+#         coeff_vector = coeff_a[i, :]
+#         obj = gp.LinExpr()
+#         for j in range(num_vars_a):
+#             obj += coeff_vector[j] * x[j]
+#         objective_functions.append(obj)
+#
+#     # Introduce a new variable representing the minimum of the minimum values
+#     min_of_min = m.addVar(vtype=GRB.CONTINUOUS, name="min_of_min")
+#     # Add constraints to ensure that min_of_min is less than or equal to each objective
+#     for i, obj_func in enumerate(objective_functions):
+#         m.addConstr(min_of_min <= obj_func, f"min_constraint_{i}")
+#
+#     m.addConstr(quicksum(x[i] for i in range(num_vars_a)) == committee_size_a, "c2")
+#
+#     m.setObjective(min_of_min, sense=GRB.MAXIMIZE)
+#
+#     m.optimize()
+#     optimal_solution_dict = {}
+#     if m.status == GRB.OPTIMAL:
+#         temp = {}
+#         for v in m.getVars():
+#             if v.varName != 'min_of_min':
+#                 temp[v.varName] = v.x
+#         optimal_solution_dict["final_committee"] = temp
+#         optimal_solution_dict["optimized_value"] = m.objVal
+#
+#     else:
+#         temp = {}
+#         for v in m.getVars():
+#             if v.varName != 'min_of_min':
+#                 temp[v.varName] = v.x
+#         optimal_solution_dict["final_committee"] = temp
+#         optimal_solution_dict["optimized_value"] = m.objVal
+#     return optimal_solution_dict
 

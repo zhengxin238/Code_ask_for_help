@@ -9,9 +9,9 @@ import numpy as np
 from pymongo import MongoClient
 
 # pd.set_option('display.max_columns', None)
-client = MongoClient('localhost', 27017)
-db = client['DataTest_Voting']
-collection = db['all_methods_00009-00000001']
+# client = MongoClient('localhost', 27017)
+# db = MongoClient('localhost', 27017)['DataTest_Voting']
+collection = MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001']
 # =====================================================
 # the input information
 
@@ -140,15 +140,16 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
     return None
 
-def runTestAll(url):
+def runTestAll(url,collection_db):
     getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(np.arange(0.1, 1.0, 0.1).tolist(), np.arange(1, len(list(range(1, (
         prefLibParse.getNumberOfAlternatives(url) + 1)))), 1).tolist(), list(range(1, (
         prefLibParse.getNumberOfAlternatives(url) + 1))), list(
     range(1, (prefLibParse.getNumberOfVoters(url) + 1))),
-                                                           prefLibParse.getPreferenceList(url), db['all_methods_00009-00000001'])
+                                                           prefLibParse.getPreferenceList(url),collection_db)
     return None
 
-runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc")
+# runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc",
+#                                      MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001'])
 # #
 # committee_size = 4
 # p = 0.7

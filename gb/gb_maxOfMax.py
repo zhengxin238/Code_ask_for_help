@@ -4,47 +4,78 @@ from gurobipy import *
 from coefficients import graphCode_Coefficient_MaxOfMax
 
 
-
-def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
+def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a, m_value_a):
     optimal_solution_dict = {}
+
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
     m.Params.TimeLimit = 300
-    x = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
-    objective_functions = []
-    for i in range(coeff_a.shape[0]):
-        coeff_vector = coeff_a[i, :]
-        obj = gp.LinExpr()
-        for j in range(num_vars_a):
-            obj += coeff_vector[j] * x[j]
-        objective_functions.append(obj)
+    num_variables_group1 = num_vars_a
+    x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 
-    optimal_solutions = []
-    optimal_values = []
-    corresponding_objectives = []
+    a_group_2dimensional = {}
+    for i in range(len(list_of_neighbors_a)):
+        for j in range(len(list_of_neighbors_a[i])):
+            if len(list_of_neighbors_a[i]) != 0:
+                a_group_2dimensional[i, j] = m.addVar(vtype=GRB.BINARY, name=f"a_{i}_{j}")
 
-    m.addConstr(gp.quicksum(x[j] for j in range(num_vars_a)) == committee_size_a, "sum_constraint")
+    for i in range(len(list_of_neighbors_a)):
+        if len(list_of_neighbors_a[i]) != 0:
+            m.addConstr(sum(a_group_2dimensional[i, j] for j in range(len(list_of_neighbors_a[i]))) == 1,
+                        f"constraint_sum_{i}")
 
-    for i, obj_func in enumerate(objective_functions):
-        m.reset()
-        m.setObjective(obj_func, sense=GRB.MAXIMIZE)
-        m.optimize()
+    m.addConstr(quicksum(x_group1[i] for i in range(num_vars_a)) == committee_size_a, "c2")
 
-        # Store the optimal solution, optimal value, and corresponding objective function
-        optimal_solutions.append([v.x for v in m.getVars()])
-        optimal_values.append(m.objVal)
-        corresponding_objectives.append(i)
+    # Introduce a new variable s
+    s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
 
-    # Find the index of the maximum optimal value
-    max_optimal_index = optimal_values.index(max(optimal_values))
+    # Group variables by their first index
+    grouped_variables = {}
 
-    # Retrieve the solution corresponding to the maximum optimal value
-    max_optimal_solution = optimal_solutions[max_optimal_index]
-    # max_optimal_objective = corresponding_objectives[max_optimal_index]
-    max_optimal_solution_dict = {f'x[{i}]': value for i, value in enumerate(max_optimal_solution)}
-    optimal_solution_dict["final_committee"] = max_optimal_solution_dict
-    optimal_solution_dict["optimized_value"] = max(optimal_values)
-    return optimal_solution_dict
+    for key, var in a_group_2dimensional.items():
+        first_index = key[0]
+        if first_index not in grouped_variables:
+            grouped_variables[first_index] = []
+        grouped_variables[first_index].append(var)
+
+    # Add constraints for each group of variables
+    for first_index, variables_in_group in grouped_variables.items():
+        m.addConstr(sum(variables_in_group) == 1, f"group_constraint_{first_index}")
+
+    # print(a_group_2dimensional)
+    constrains_objective_functions = []
+    for voterindex, voter in enumerate(list_of_neighbors_a):
+        if len(voter) != 0:
+            for i in range(0, len(voter)):
+                coeff_vector = coeff_a[(voter[i] - 1), :]
+                obj = gp.LinExpr()
+                for j in range(num_vars_a):
+                    obj += coeff_vector[j] * x_group1[j]
+
+                constrains_objective_functions.append(obj)
+        else:
+            constrains_objective_functions.append(num_vars_a * len(list_of_neighbors_a))
+
+    for i, obj_func in enumerate(constrains_objective_functions):
+        m.addConstr(s <= obj_func, f"max_constraint_{i}")
+
+    m.setObjective(s, sense=GRB.MAXIMIZE)
+    m.optimize()
+    if m.status == GRB.OPTIMAL:
+        x_value_dict = m.getAttr('X', x_group1)
+        max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
+        optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
+        optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
+        return optimal_solution_dict
+    else:
+        x_value_dict = m.getAttr('X', x_group1)
+        max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
+        optimal_solution_dict["final_committee"] = max_optimal_solution_formatted
+        optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
+        return optimal_solution_dict
+
 
 
 
