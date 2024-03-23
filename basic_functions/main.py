@@ -17,8 +17,7 @@ db = MongoClient('localhost', 27017)['DataTest_Voting']
 
 
 
-file_path = r"soc_urls_p1_21.txt"
-
+file_path = r"D:\TU Clausthal\Masterarbeit\Code\tests\soc_urls_p1_21.txt"
 
 mergingTestForNineMethods.readURL_test_data(db, file_path)
 
