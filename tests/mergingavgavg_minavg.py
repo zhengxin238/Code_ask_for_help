@@ -72,8 +72,8 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
     return None
 
 
-getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
-                                                           preference_in_table, collection)
+# getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
+#                                                            preference_in_table, collection)
 # #
 # committee_size = 4
 # p = 0.7

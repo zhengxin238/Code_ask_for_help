@@ -60,7 +60,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
     optimal_solution_dict = {}
 
     for neighborofvoterv in list_of_neighbors_a:
-        if neighborofvoterv != []:
+        if len(neighborofvoterv) != 0:
             m = Model("mlp")
             # Set the time limit (e.g., 300 seconds)
             m.Params.TimeLimit = 300
@@ -91,7 +91,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
             x_value_dict = m.getAttr('X', x_variables)
             optimal_solutions.append(x_value_dict)
             optimal_values.append(m.objVal)
-        if neighborofvoterv == []:
+        if len(neighborofvoterv) == 0:
             m = Model("mlp")
             m.reset()
             x_variables = m.addVars(num_vars_a, vtype=GRB.BINARY, name="x")
@@ -112,7 +112,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         optimal_solution_dict["optimized_value"] = max(optimal_values)
         print(optimal_solution_dict)
         return optimal_solution_dict
-    else: pass
+
 
 
 

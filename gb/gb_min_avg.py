@@ -90,6 +90,8 @@ def minOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
                 optimal_solution_dict_temp[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution_dict_temp
         optimal_solution_dict["optimized_value"] = m.objVal
+
+    print(optimal_solution_dict)
     return optimal_solution_dict
 
 # minOfAvg_model_run_optimization(num_vars, coeff, committee_size)

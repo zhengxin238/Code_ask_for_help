@@ -80,14 +80,14 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                           function_code.borda_score_df_func(candidates,
                                                                                                             voters,
                                                                                                             preference_in_table)),
-                                                                              committee_size)
+                                                                              committee_size,preference_in_table)
             # print(444444444444444444444444444444444444444444444444444444444444444)
             result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
                                                                           function_code.borda_score_df_func(candidates,
                                                                                                             voters,
                                                                                                             preference_in_table)),
-                                                                              committee_size)
+                                                                              committee_size,preference_in_table)
             # print(555555555555555555555555555555555555555555555555555555555555555555555)
             result_dict_max_min = gb_MaxOfMin.maxOfMin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
@@ -148,6 +148,21 @@ def runTestAll(url,collection_db):
                                                            prefLibParse.getPreferenceList(url),collection_db)
     return None
 
+
+def readURL_test_data(database_location, file_path_with_URL):
+    with open(file_path_with_URL, 'r') as file:
+        # Iterate through each line in the file
+        for line in file:
+            # Remove leading and trailing whitespace from the line
+            line = line.strip()
+            parts = line.split('/')
+            # Get the last part of the URL (the filename)
+            filename = parts[-1]
+            # Remove the '.soc' extension
+            filename_without_extension = filename.split('.')[0]
+            # Extract the desired substring
+            substring = filename_without_extension.split('-')[1]
+            runTestAll(line, database_location[substring])
 # runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc",
 #                                      MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001'])
 # #

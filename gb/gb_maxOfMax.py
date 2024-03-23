@@ -4,15 +4,16 @@ from gurobipy import *
 from coefficients import graphCode_Coefficient_MaxOfMax
 
 
-def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a, m_value_a):
+def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a):
+    m_value_a = 2 *num_vars_a
     optimal_solution_dict = {}
-
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 300
+    m.Params.TimeLimit = 60
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 
+    # Introduce 2D variables
     a_group_2dimensional = {}
     for i in range(len(list_of_neighbors_a)):
         for j in range(len(list_of_neighbors_a[i])):
@@ -26,24 +27,12 @@ def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
 
     m.addConstr(quicksum(x_group1[i] for i in range(num_vars_a)) == committee_size_a, "c2")
 
-    # Introduce a new variable s
+    # Introduce a new group variables s
     s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
-
-    # Group variables by their first index
-    grouped_variables = {}
-
-    for key, var in a_group_2dimensional.items():
-        first_index = key[0]
-        if first_index not in grouped_variables:
-            grouped_variables[first_index] = []
-        grouped_variables[first_index].append(var)
-
-    # Add constraints for each group of variables
-    for first_index, variables_in_group in grouped_variables.items():
-        m.addConstr(sum(variables_in_group) == 1, f"group_constraint_{first_index}")
 
     # print(a_group_2dimensional)
     constrains_objective_functions = []
+
     for voterindex, voter in enumerate(list_of_neighbors_a):
         if len(voter) != 0:
             for i in range(0, len(voter)):
@@ -51,16 +40,17 @@ def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
                 obj = gp.LinExpr()
                 for j in range(num_vars_a):
                     obj += coeff_vector[j] * x_group1[j]
-
+                obj += (1 - a_group_2dimensional[voterindex, i]) * m_value_a
                 constrains_objective_functions.append(obj)
+                m.addConstr(s <= obj, f"maxofmax_constraint_{i}")
         else:
-            constrains_objective_functions.append(num_vars_a * len(list_of_neighbors_a))
+            s = 0
+    # Define the objective function as the sum of all variables
+    objective_expr = s
 
-    for i, obj_func in enumerate(constrains_objective_functions):
-        m.addConstr(s <= obj_func, f"max_constraint_{i}")
-
-    m.setObjective(s, sense=GRB.MAXIMIZE)
+    m.setObjective(objective_expr, sense=GRB.MAXIMIZE)
     m.optimize()
+    # Print the results
     if m.status == GRB.OPTIMAL:
         x_value_dict = m.getAttr('X', x_group1)
         max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
@@ -69,6 +59,7 @@ def maxOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         print(optimal_solution_dict)
         return optimal_solution_dict
     else:
+        best_solution = m.getVars()
         x_value_dict = m.getAttr('X', x_group1)
         max_optimal_solution_formatted = {f'x[{k}]': v for k, v in x_value_dict.items()}
         optimal_solution_dict["final_committee"] = max_optimal_solution_formatted

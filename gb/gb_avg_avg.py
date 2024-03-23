@@ -57,6 +57,7 @@ def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voter
             optimal_solution[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution
         optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
         return optimal_solution_dict
     else:
         optimal_solution_dict = {}
@@ -65,6 +66,7 @@ def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voter
             optimal_solution[v.varName] = v.x
         optimal_solution_dict["final_committee"] = optimal_solution
         optimal_solution_dict["optimized_value"] = m.objVal
+        print(optimal_solution_dict)
         return optimal_solution_dict
 
 # m = avgOfAvg_model(num_vars,coeff,4)

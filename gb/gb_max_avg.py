@@ -112,6 +112,7 @@ def maxOfAvg_model_run_optimization(num_vars_a, coeff_a, committee_size_a):
 
     optimal_solution_dict["final_committee"] = optimal_solution_dict_t[max_optimal_index]
     optimal_solution_dict["optimized_value"] = max(optimal_values)
+    print(optimal_solution_dict)
     return  optimal_solution_dict
 
 
