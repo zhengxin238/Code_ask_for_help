@@ -1,5 +1,6 @@
 from tests import mergingTestForNineMethods
 from pymongo import MongoClient
+import calcultionScreenshots
 
 db = MongoClient('localhost', 27017)['DataTest_Voting']
 # mergingTestForNineMethods.runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc",  db['all_methods_00009-00000001'])
@@ -16,7 +17,7 @@ db = MongoClient('localhost', 27017)['DataTest_Voting']
 
 
 
-file_path = r"D:\data_collections_preflib\soc_urls_p1_21.txt"
+file_path = r"soc_urls_p1_21.txt"
 
 
 mergingTestForNineMethods.readURL_test_data(db, file_path)
