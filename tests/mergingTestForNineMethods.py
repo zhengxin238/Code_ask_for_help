@@ -1,3 +1,5 @@
+import uuid
+
 import networkx as nx
 
 from gb import gb_min_avg, gb_AvgOfMin, gb_minOfMin, gb_maxOfMax, gb_max_avg, gb_avg_avg, gb_MaxOfMin, \
@@ -33,9 +35,11 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
     for committee_size in committee_size_list:
         committee_size_dict = {}
         result_list_dict_temp = {}
+        last_value = 1
         for p in p_list:
             g = graphCode.getGraph(p, len(voters))
-            output_file = f"random_graph_allMethods_{committee_size}_{p}"
+            output_file = f"random_graph_{committee_size}_{p}_{last_value}_{uuid.uuid4()}"
+            last_value += 1
             nx.write_graphml(g, output_file)
             result_dict_avg_avg = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates),
                                                                              graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
