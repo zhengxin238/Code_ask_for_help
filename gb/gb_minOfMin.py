@@ -51,7 +51,7 @@ def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
 
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 300
+    m.Params.TimeLimit = 100
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
     # Introduce 2D variables
@@ -83,7 +83,8 @@ def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
                 for j in range(num_vars_a):
                     obj += coeff_vector[j] * x_group1[j]
                 constrains_objective_functions.append(obj)
-                m.addConstr(s <= obj, "avgofmin_constraint_{i}")
+            for i, obj_func in enumerate(constrains_objective_functions):
+                m.addConstr(s <= obj_func, f"max_constraint_{i}")
         else:
             s = 0
     # Define the objective function as the sum of all variables

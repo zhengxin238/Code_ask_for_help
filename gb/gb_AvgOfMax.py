@@ -85,7 +85,7 @@ def avgOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
     optimal_solution_dict = {}
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 60
+    m.Params.TimeLimit = 100
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 

@@ -63,7 +63,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
         if len(neighborofvoterv) != 0:
             m = Model("mlp")
             # Set the time limit (e.g., 300 seconds)
-            m.Params.TimeLimit = 300
+            m.Params.TimeLimit = 100
             m.reset()
             num_variables_group1 = num_vars_a
             x_variables = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
@@ -78,7 +78,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
                 constrains_objective_functions.append(obj)
         # Introduce a new variable s
             s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
-        # Add constraints to ensure that min_of_max is less than or equal to each objective
+        # Add constraints to ensure that max_of_min is less than or equal to each objective
             for i, obj_func in enumerate(constrains_objective_functions):
                 m.addConstr(s <= obj_func, f"max_constraint_{i}")
 
