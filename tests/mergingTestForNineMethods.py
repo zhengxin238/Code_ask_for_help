@@ -163,7 +163,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
 
 def runTestAll(url, collection_db):
-    for i in range(1, 10):
+    for i in range(1, 11):
         getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(np.arange(0.1, 1.0, 0.1).tolist(),
                                                                      np.arange(1, len(list(range(1, (
                                                                              prefLibParse.getNumberOfAlternatives(
@@ -189,7 +189,8 @@ def readURL_test_data(database_location, file_path_with_URL):
             # Remove the '.soc' extension
             filename_without_extension = filename.split('.')[0]
             # Extract the desired substring
-            substring = filename_without_extension.split('-')[1]
+            substring = filename_without_extension
+            """filename_without_extension.split('-')[1]"""
             runTestAll(line, database_location[substring])
 # runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc",
 #                                      MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001'])

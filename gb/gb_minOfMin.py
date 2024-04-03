@@ -87,7 +87,7 @@ def minOfmin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
                 m.addConstr(s <= obj_func, f"max_constraint_{i}")
         else:
             s = 0
-    # Define the objective function as the sum of all variables
+    # Define the objective function as the s
     objective_expr = s
 
     m.setObjective(objective_expr, sense=GRB.MAXIMIZE)
