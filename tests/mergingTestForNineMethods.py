@@ -93,7 +93,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, preference_in_table)
+                                                                              committee_size, graphCode.getFriendStructureList(g))
             # print(444444444444444444444444444444444444444444444444444444444444444)
             result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
@@ -101,7 +101,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, preference_in_table)
+                                                                              committee_size, graphCode.getFriendStructureList(g))
             # print(555555555555555555555555555555555555555555555555555555555555555555555)
             result_dict_max_min = gb_MaxOfMin.maxOfMin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
