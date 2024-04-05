@@ -41,7 +41,7 @@ friend_structure_list = graphCode.getFriendStructureList(0.05, prefLibParse.getN
 def avgOfAvg_model_run_optimization(num_vars_aa,coeff_aa,committee_size_aa,voters_aa):
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 300
+    m.Params.TimeLimit = 100
     # x_dic = {}
     # for i in range(num_vars_aa):
     #     x_dic[i] = m.addVar(name=f'x', vtype=GRB.BINARY)

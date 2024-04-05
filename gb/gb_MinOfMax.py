@@ -77,7 +77,7 @@ def minOfMax_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
 
     m = Model("mlp")
     # Set the time limit (e.g., 300 seconds)
-    m.Params.TimeLimit = 300
+    m.Params.TimeLimit = 100
     num_variables_group1 = num_vars_a
     x_group1 = m.addVars(num_variables_group1, vtype=GRB.BINARY, name="x")
 
