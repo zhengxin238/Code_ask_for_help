@@ -87,13 +87,14 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
                                                                              committee_size)
             # print(333333333333333333333333333333333333333333333333333333)
+
             result_dict_max_max = gb_maxOfMax.maxOfMax_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MaxOfMax.getCoefficientMatrix(
                                                                                   function_code.borda_score_df_func(
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, graphCode.getFriendStructureList(g))
+                                                                              committee_size, graphCode.getFriendStructureList(g),2*len(candidates))
             # print(444444444444444444444444444444444444444444444444444444444444444)
             result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
