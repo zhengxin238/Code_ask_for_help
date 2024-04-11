@@ -93,7 +93,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, graphCode.getFriendStructureList(g))
+                                                                              committee_size, graphCode.getFriendStructureList(g),2*len(candidates))
             # print(444444444444444444444444444444444444444444444444444444444444444)
             result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
