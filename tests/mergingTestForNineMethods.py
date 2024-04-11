@@ -87,6 +87,7 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
 
                                                                              committee_size)
             # print(333333333333333333333333333333333333333333333333333333)
+
             result_dict_max_max = gb_maxOfMax.maxOfMax_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MaxOfMax.getCoefficientMatrix(
                                                                                   function_code.borda_score_df_func(
