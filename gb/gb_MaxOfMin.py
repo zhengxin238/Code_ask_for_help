@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import *
 
 
-# candidates = ['candidate_a', 'candidate_b', 'candidate_c', 'candidate_d', 'candidate_e', 'candidate_f']
+# candidates = ['candidate_a', 'candidate_b', 'candidate_c']
 # committee_size =3
 #
 # # Define decision variables
@@ -80,7 +80,7 @@ def maxOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_
             s = m.addVar(vtype=GRB.CONTINUOUS, name="s")
         # Add constraints to ensure that max_of_min is less than or equal to each objective
             for i, obj_func in enumerate(constrains_objective_functions):
-                m.addConstr(s <= obj_func, f"max_constraint_{i}")
+                m.addConstr(s <= obj_func, f"min_constraint_{i}")
 
             m.addConstr(quicksum(x_variables[i] for i in range(num_vars_a)) == committee_size_a, "c2")
             m.addConstr(quicksum(a_group[i] for i in range(len(neighborofvoterv))) == 1, "c3")

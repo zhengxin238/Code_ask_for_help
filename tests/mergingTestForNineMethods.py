@@ -1,3 +1,4 @@
+import os
 import uuid
 
 import networkx as nx
@@ -12,39 +13,29 @@ from coefficients import graphCode_Coefficient_MinOfMax, graphCode_Coefficient_M
 import numpy as np
 from pymongo import MongoClient
 
-# pd.set_option('display.max_columns', None)
-# client = MongoClient('localhost', 27017)
-# db = MongoClient('localhost', 27017)['DataTest_Voting']
 collection = MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001']
 
 
-# =====================================================
-# the input information
+def write_graph_to_folder(G, output_folder, output_file):
+    # Make sure the output folder exists
+    os.makedirs(output_folder, exist_ok=True)
 
-# =====================================================
-# url = r"https://www.preflib.org/static/data/agh/00009-00000001.soc"
-# candidates = list(range(1, (
-#         prefLibParse.getNumberOfAlternatives(url) + 1)))
-# voters = list(
-#     range(1, (prefLibParse.getNumberOfVoters(url) + 1)))
-# preference_in_table = prefLibParse.getPreferenceList(url)
-#
-# # =====================================================
-# p_list = np.arange(0.8, 1.0, 0.1).tolist()
-# committee_size_list = np.arange(1, len(candidates), 1).tolist()
+    # Write the graph to a GraphML file in the specified folder
+    output_path = os.path.join(output_folder, output_file)
+    nx.write_graphml(G, output_path)
 
 
 def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committee_size_list, candidates, voters,
-                                                                 preference_in_table, collection_db):
+                                                                 preference_in_table, collection_db, dsvalue):
     for committee_size in committee_size_list:
         committee_size_dict = {}
         result_list_dict_temp = {}
         last_value = 1
         for p in p_list:
             g = graphCode.getGraph(p, len(voters))
-            output_file = f"random_graph_{committee_size}_{p}_{last_value}_{uuid.uuid4()}"
+            output_file = f"random_graph_{committee_size}_{p}_{dsvalue}_{uuid.uuid4()}"
             last_value += 1
-            nx.write_graphml(g, output_file)
+            write_graph_to_folder(g, "D:/output", output_file)
             result_dict_avg_avg = gb_avg_avg.avgOfAvg_model_run_optimization(len(candidates),
                                                                              graphCode_Coefficient_AvgAvg.stepTwoVector_coeff(
                                                                                  function_code.borda_score_df_func(
@@ -94,7 +85,9 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, graphCode.getFriendStructureList(g),2*len(candidates))
+                                                                              committee_size,
+                                                                              graphCode.getFriendStructureList(g),
+                                                                              2 * len(candidates))
             # print(444444444444444444444444444444444444444444444444444444444444444)
             result_dict_min_min = gb_minOfMin.minOfmin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MinOfMin.getCoefficientMatrix(
@@ -102,7 +95,8 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
                                                                                       candidates,
                                                                                       voters,
                                                                                       preference_in_table)),
-                                                                              committee_size, graphCode.getFriendStructureList(g))
+                                                                              committee_size,
+                                                                              graphCode.getFriendStructureList(g))
             # print(555555555555555555555555555555555555555555555555555555555555555555555)
             result_dict_max_min = gb_MaxOfMin.maxOfMin_model_run_optimization(len(candidates),
                                                                               graphCode_Coefficient_MaxOfMin.getCoefficientMatrix(
@@ -163,9 +157,9 @@ def getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(p_list, committ
     return None
 
 
-def runTestAll(url, collection_db):
+def runTestAll(url, collection_db, dsvalue):
     for i in range(1, 11):
-        getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(np.arange(0.1, 1.0, 0.1).tolist(),
+        getResultIntoDB_allMethods_graphnnormal_diff_committeesize_p(np.arange(0.1, 1.1, 0.1).tolist(),
                                                                      np.arange(1, len(list(range(1, (
                                                                              prefLibParse.getNumberOfAlternatives(
                                                                                  url) + 1)))), 1).tolist(),
@@ -173,7 +167,8 @@ def runTestAll(url, collection_db):
                                                                              prefLibParse.getNumberOfAlternatives(
                                                                                  url) + 1))), list(
                 range(1, (prefLibParse.getNumberOfVoters(url) + 1))),
-                                                                     prefLibParse.getPreferenceList(url), collection_db)
+                                                                     prefLibParse.getPreferenceList(url), collection_db,
+                                                                     dsvalue)
 
     return None
 
@@ -192,46 +187,4 @@ def readURL_test_data(database_location, file_path_with_URL):
             # Extract the desired substring
             substring = filename_without_extension
             """filename_without_extension.split('-')[1]"""
-            runTestAll(line, database_location[substring])
-# runTestAll(r"https://www.preflib.org/static/data/agh/00009-00000001.soc",
-#                                      MongoClient('localhost', 27017)['DataTest_Voting']['all_methods_00009-00000001'])
-# #
-# committee_size = 4
-# p = 0.7
-#
-# num_vars = len(candidates)
-#
-# # graph and friendsstructure =====================================================f1 (p, committee_size)
-#
-# g = graphCode.getGraph(p, len(voters))
-# friend_structure_list = graphCode.getFriendStructureList(g)
-#
-# # ===================================================== (candidates, voters, preference_in_table)
-# # voter-candidate borda score dataframe
-#
-# df_bordaScore = function_code.borda_score_df_func(candidates, voters, preference_in_table)
-# #
-# # # =====================================================
-# # adjacencyMatrix = graphCode_Coefficient_MinAvg.getAdjacencyMatrix(g)
-# # # =====================================================
-# # oneOverFv = graphCode_Coefficient_MinAvg.getOneOverFv(friend_structure_list)
-# # =====================================================
-# list_of_neighbors = graphCode_Coefficient_AvgOfMin.getNeighbors(g)
-# # =====================================================
-# coeff = graphCode_Coefficient_AvgOfMin.getCoefficientMatrix(df_bordaScore)
-# # =====================================================f1
-# m_value = 2 * len(candidates)
-# # =====================================================
-# result_dict = gb_AvgOfMin.avgOfMin_model_run_optimization(len(candidates),
-#                                                           graphCode_Coefficient_AvgOfMin.getCoefficientMatrix(
-#                                                               df_bordaScore), committee_size,
-#                                                           graphCode_Coefficient_AvgOfMin.getNeighbors(g))
-#
-# # =====================================================f1
-# result_dict = gb_AvgOfMin.avgOfMin_model_run_optimization(num_vars_a, coeff_a, committee_size_a, list_of_neighbors_a)
-# =====================================================f1
-# collection.insert_one(result_dict)
-# =====================================================f1
-# scale_free_graph = nx.barabasi_albert_graph(len(voters), 2)
-# friend_structure_list_scale_free = graphCode.getFriendStructureList(scale_free_graph)
-# =====================================================f1
+            runTestAll(line, database_location[substring], substring)

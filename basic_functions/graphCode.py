@@ -5,22 +5,36 @@ import numpy as np
 
 
 
+# def getGraph(p, n):
+#     g = nx.Graph()
+#     g.add_nodes_from(range(1, (n + 1)))  # Add nodes from 1 to n
+#
+#     # Add an edge between the first two nodes
+#     if n >= 2:
+#         g.add_edge(1, 2)
+#
+#     for i in range(2, n + 1):  # Start iterating from node 3
+#         for j in range(i + 1, n + 1):  # Iterate over remaining nodes
+#             R = random.random()  # Generate a random number between 0 and 1
+#             if R < p:  # If the random number is less than the probability p
+#                 g.add_edge(i, j)  # Add an edge between nodes i and j based on probability p
+#     return g
+
+
 def getGraph(p, n):
-    g = nx.Graph()
-    g.add_nodes_from(range(1, (n + 1)))  # Add nodes from 1 to n
+    # Create an empty graph
+    G = nx.Graph()
 
-    # Add an edge between the first two nodes
-    if n >= 2:
-        g.add_edge(1, 2)
+    # Add nodes to the graph
+    G.add_nodes_from(range(n))
 
-    for i in range(2, n + 1):  # Start iterating from node 3
-        for j in range(i + 1, n + 1):  # Iterate over remaining nodes
-            R = random.random()  # Generate a random number between 0 and 1
-            if R < p:  # If the random number is less than the probability p
-                g.add_edge(i, j)  # Add an edge between nodes i and j based on probability p
-    return g
+    # Add edges with probability p
+    for i in range(n):
+        for j in range(i + 1, n):
+            if random.random() < p:
+                G.add_edge(i, j)
 
-
+    return G
 
 # g = nx.Graph()
 #

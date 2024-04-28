@@ -1,1 +1,9 @@
-https://www.preflib.org/static/data/netflix/00004-00000001.soc
+https://www.preflib.org/static/data/sushi/00014-00000001.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000002.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000005.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000006.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000008.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000010.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000011.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000012.soc
+https://www.preflib.org/static/data/cleanweb/00015-00000013.soc
